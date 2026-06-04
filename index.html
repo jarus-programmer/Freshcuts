@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FreshCuts Studio — Katowice | Cyberpunk Barber</title>
+  <meta name="description" content="FreshCuts Studio — cyberpunkowy barber w Katowicach. Neon, fade, broda i nowoczesny styl." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --neon-primary:#9B5DE5;
+      --neon-secondary:#F94144;
+      --neon-accent:#00FF88;
+      --bg-dark:#05030c;
+      --bg-panel:#0d0a1a;
+      --text-primary:#f8f4ff;
+      --text-muted:#b4accf;
+      --grid-line:rgba(155,93,229,.12);
+      --font-display:'Space Grotesk',sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      font-family:var(--font-display);
+      background:var(--bg-dark);
+      color:var(--text-primary);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    a{text-decoration:none;color:inherit}
+
+    button{font-family:inherit;cursor:pointer;border:none;background:transparent;color:inherit}
+    
+    .sidebar{
+      position:fixed;
+      top:0;
+      left:0;
+      height:100vh;
+      width:280px;
+      background:linear-gradient(180deg,var(--bg-panel),#0a0815);
+      border-right:1px solid rgba(155,93,229,.2);
+      display:flex;
+      flex-direction:column;
+      padding:2rem 1.5rem;
+      z-index:1000;
+      overflow-y:auto;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:0.8rem;
+      font-size:1.4rem;
+      font-weight:700;
+      margin-bottom:3rem;
+      color:var(--neon-primary);
+    }
+
+    .brand svg{width:2.2rem;height:2.2rem}
+
+    .nav-links{display:grid;gap:0.5rem}
+
+    .nav-links a{
+      padding:0.9rem 1rem;
+      border-radius:8px;
+      color:var(--text-muted);
+      font-size:0.95rem;
+      transition:all 0.25s ease;
+      display:flex;
+      align-items:center;
+      gap:0.8rem;
+    }
+
+    .nav-links a:hover,.nav-links a.active{
+      background:rgba(155,93,229,.12);
+      color:var(--text-primary);
+      border-left:3px solid var(--neon-primary);
+    }
+
+    .nav-links svg{width:1.1rem;height:1.1rem;opacity:0.7}
+
+    .hours-widget{
+      margin-top:auto;
+      padding:1.2rem;
+      background:rgba(155,93,229,.06);
+      border:1px solid rgba(155,93,229,.18);
+      border-radius:12px;
+      font-family:var(--font-mono);
+      font-size:0.85rem;
+    }
+
+    .hours-widget h4{color:var(--neon-primary);margin-bottom:0.8rem;font-size:0.9rem}
+
+    .hours-widget p{color:var(--text-muted);margin:0.3rem 0;font-size:0.8rem}
+
+    .hours-widget .status{color:var(--neon-accent);font-weight:600;margin-top:0.6rem}
+    
+    .main-content{
+      margin-left:280px;
+      min-height:100vh;
+    }
+    
+    .hero{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      position:relative;
+      background:
+        linear-gradient(90deg,var(--grid-line) 1px,transparent 1px),
+        linear-gradient(var(--grid-line) 1px,transparent 1px),
+        radial-gradient(circle at 50% 30%,rgba(155,93,229,.2),transparent 50%),
+        var(--bg-dark);
+      background-size:
+        60px 60px,
+        60px 60px,
+        100% 100%,
+        100% 100%;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 20% 80%,rgba(249,65,68,.15),transparent 40%),
+                radial-gradient(circle at 80% 20%,rgba(155,93,229,.18),transparent 40%);
+      pointer-events:none;
+    }
+
+    .hero-content{
+      text-align:center;
+      z-index:1;
+      padding: 0 2rem;
+      max-width:900px;
+    }
+
+    .hero-eyebrow{
+      color:var(--neon-accent);
+      text-transform:uppercase;
+      letter-spacing:0.3em;
+      font-size:0.75rem;
+      font-weight:700;
+      margin-bottom:1.2rem;
+      font-family:var(--font-mono);
+    }
+
+    .hero h1{
+      font-size:clamp(3.5rem,10vw,7rem);
+      line-height:0.95;
+      margin-bottom:1.5rem;
+      background:linear-gradient(135deg,var(--text-primary),var(--neon-primary));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    .hero p{
+      color:var(--text-muted);
+      font-size:clamp(1.1rem,2.5vw,1.4rem);
+      max-width:600px;
+      margin:0 auto 2rem;
+    }
+
+    .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+    .btn{
+      padding:1rem 2rem;
+      border-radius:999px;
+      font-weight:700;
+      font-size:1rem;
+      transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display:inline-flex;
+      align-items:center;
+      gap:0.7rem;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--neon-primary),var(--neon-secondary));
+      color:#fff;
+      box-shadow:0 8px 30px rgba(155,93,229,.35);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 40px rgba(155,93,229,.5);
+    }
+
+    .btn-secondary{
+      border:1px solid var(--neon-primary);
+      color:#d8c8ff;
+    }
+
+    .btn-secondary:hover{background:rgba(155,93,229,.1);border-color:var(--neon-accent);color:#fff}
+    
+    .bento-section{padding:7rem 3rem}
+
+    .section-header{margin-bottom:3rem}
+
+    .section-header .eyebrow{color:var(--neon-accent);text-transform:uppercase;letter-spacing:0.25em;font-size:0.75rem;font-weight:700;margin-bottom:1rem;font-family:var(--font-mono)}
+
+    .section-header h2{font-size:clamp(2.2rem,5vw,3.5rem);margin:0}
+
+    .bento-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      grid-auto-rows:minmax(160px,auto);
+      gap:1.2rem;
+      max-width:1400px;
+      margin:0 auto;
+    }
+
+    .bento-item{
+      background:rgba(13,10,26,.8);
+      border:1px solid rgba(155,93,229,.15);
+      border-radius:16px;
+      padding:2rem;
+      transition:all 0.3s ease;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .bento-item:hover{
+      border-color:rgba(155,93,229,.5);
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px rgba(0,0,0,.6);
+    }
+
+    .bento-item.w2{grid-column:span 2}
+
+    .bento-item.w2-h{grid-row:span 2}
+
+    .bento-item.w2-bottom{grid-column:span 2} 
+    
+    .bento-label{
+      font-family:var(--font-mono);
+      font-size:0.8rem;
+      color:var(--neon-primary);
+      text-transform:uppercase;
+      letter-spacing:0.1em;
+      margin-bottom:0.5rem;
+    }
+
+    .bento-item h3{font-size:1.3rem;margin-bottom:0.5rem}
+
+    .bento-item p{color:var(--text-muted);font-size:0.95rem;margin:0;max-width:85%}
+
+    .bento-item .price{
+      position:absolute;top:2rem;right:2rem;
+      font-family:var(--font-mono);
+      color:var(--neon-accent);
+      font-size:1.2rem;font-weight:700;
+    }
+
+    .bento-item.featured{
+      border-color:rgba(155,93,229,.6);
+      background:linear-gradient(135deg,rgba(155,93,229,.08),rgba(249,65,68,.04));
+    }
+
+    .bento-item.featured::after{
+      content:'// RECOMMENDED';
+      position:absolute;top:1rem;left:1rem;
+      font-family:var(--font-mono);
+      color:var(--neon-primary);
+      font-size:0.7rem;font-weight:700;
+    }
+    
+    .terminal-section{
+      padding:7rem 3rem;
+      background:linear-gradient(180deg,var(--bg-dark),#0a0815);
+    }
+    .terminal-window{
+      max-width:1100px;
+      margin:2rem auto 0;
+      background:#0a0912;
+      border:1px solid rgba(155,93,229,.25);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+    }
+    .terminal-header{
+      display:flex;
+      align-items:center;
+      gap:0.6rem;
+      padding:1rem 1.2rem;
+      background:rgba(13,10,26,.95);
+      border-bottom:1px solid rgba(155,93,229,.15);
+    }
+    .terminal-dot{width:12px;height:12px;border-radius:50%}
+    .terminal-dot.red{background:#ff5f56}
+    .terminal-dot.yellow{background:#ffbd2e}
+    .terminal-dot.green{background:#27ca40}
+    .terminal-title{margin-left:auto;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)}
+    .terminal-body{
+      padding:1.5rem;
+      font-family:var(--font-mono);
+      font-size:0.9rem;
+      line-height:1.7;
+      max-height:500px;
+      overflow-y:auto;
+    }
+    .terminal-line{margin-bottom:1.2rem;padding-left:1rem;border-left:2px solid var(--neon-primary)}
+    .terminal-line .timestamp{color:var(--text-muted);font-size:0.75rem;margin-bottom:0.3rem}
+    .terminal-line .user{color:var(--neon-accent);font-weight:600}
+    .terminal-line .stars{color:var(--neon-primary);letter-spacing:0.1em}
+    .terminal-line p{color:var(--text-muted);margin:0.5rem 0 0}
+    
+    .gallery-section{padding:7rem 3rem;background:var(--bg-panel)}
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1.5rem;
+      max-width:1400px;
+      margin:2rem auto 0;
+    }
+    .gallery-item{
+      position:relative;
+      aspect-ratio:1;
+      overflow:hidden;
+      cursor:pointer;
+      border-radius:12px;
+      transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gallery-item:nth-child(even) { transform: translateY(1.5rem); }
+    .gallery-item:hover { transform: translateY(-0.5rem) scale(1.02); }
+    .gallery-item:nth-child(even):hover { transform: translateY(1rem) scale(1.02); }
+    
+    .gallery-item::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:var(--grad);
+      opacity:0.85;
+      transition:opacity 0.3s ease;
+      z-index: 1;
+    }
+    .gallery-item:hover::before{opacity:0.95}
+    .gallery-item-inner{
+      position:relative;
+      z-index:2;
+      padding:2rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      height:100%;
+    }
+    .gallery-item .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:0.4rem;
+      background:rgba(255,255,255,.15);
+      backdrop-filter:blur(8px);
+      padding:0.4rem 0.8rem;
+      border-radius:999px;
+      font-size:0.75rem;
+      margin-bottom:0.6rem;
+      width:max-content;
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+    .gallery-item h3{font-size:1.2rem;margin:0;color:#fff}
+    
+    .gallery-item:nth-child(1){--grad:linear-gradient(135deg,#140f26,#9b5de5);clip-path:polygon(0 0,100% 0,100% 90%,90% 100%,0 100%)}
+    .gallery-item:nth-child(2){--grad:linear-gradient(135deg,#180f1f,#f94144);clip-path:polygon(10% 0,100% 0,100% 100%,0 100%,0 10%)}
+    .gallery-item:nth-child(3){--grad:linear-gradient(135deg,#0d1020,#2d75c3);clip-path:polygon(0 0,90% 0,100% 10%,100% 100%,0 100%)}
+    .gallery-item:nth-child(4){--grad:linear-gradient(135deg,#15102a,#c45cff);clip-path:polygon(0 10%,100% 0,100% 100%,10% 100%,0 100%)}
+    .gallery-item:nth-child(5){--grad:linear-gradient(135deg,#120c1d,#ff5f72);clip-path:polygon(0 0,100% 5%,100% 100%,0 95%)}
+    .gallery-item:nth-child(6){--grad:linear-gradient(135deg,#0f1328,#6d5dfc);clip-path:polygon(5% 0,100% 0,100% 100%,0 100%,0 15%)}
+    
+    .contact-section{
+      padding:7rem 3rem 9rem 3rem;
+      text-align:center;
+      background:linear-gradient(180deg,#0a0815,var(--bg-dark));
+    }
+    .contact-section h2{font-size:clamp(2.5rem,6vw,4rem);margin-bottom:1.5rem}
+    .map-placeholder{
+      max-width:1200px;
+      height:400px;
+      margin:0 auto 3rem;
+      background:linear-gradient(135deg,rgba(155,93,229,.08),rgba(249,65,68,.04));
+      border:1px solid rgba(155,93,229,.2);
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .map-placeholder::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(90deg,rgba(155,93,229,.05) 0 1px,transparent 1px 60px),
+        repeating-linear-gradient(0deg,rgba(155,93,229,.05) 0 1px,transparent 1px 60px);
+    }
+    .map-placeholder div{position:relative;z-index:1;padding:2rem}
+    .map-placeholder svg{width:4.5rem;height:4.5rem;color:var(--neon-accent);margin-bottom:1.5rem}
+    .cta-big{
+      font-size:clamp(1.5rem,4vw,2.2rem);
+      font-weight:800;
+      color:var(--neon-primary);
+      text-transform:uppercase;
+      letter-spacing:0.15em;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      display:inline-block;
+      border-bottom:3px solid var(--neon-accent);
+      padding-bottom:0.3rem;
+    }
+    .cta-big:hover{color:var(--neon-accent);border-color:var(--neon-primary);transform:scale(1.02)}
+
+    .drawer{
+      position:fixed;
+      top:0;
+      right:-450px;
+      width:420px;
+      height:100vh;
+      background:var(--bg-panel);
+      border-left:1px solid rgba(155,93,229,.25);
+      z-index:2000;
+      padding:2.5rem;
+      transition:right 0.4s cubic-bezier(0.4,0,0.2,1);
+      overflow-y:auto;
+    }
+    .drawer.open{right:0}
+    .drawer-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      z-index:1999;
+      opacity:0;
+      visibility:hidden;
+      transition:all 0.3s ease;
+    }
+    .drawer-overlay.open{opacity:1;visibility:visible}
+    .drawer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+    .drawer-header h3{font-size:1.8rem}
+    .drawer-close{
+      width:44px;height:44px;
+      border-radius:12px;
+      border:1px solid rgba(155,93,229,.3);
+      display:grid;place-items:center;
+      font-size:1.5rem;
+      color:var(--text-muted);
+    }
+    .drawer-close:hover{border-color:var(--neon-primary);color:#fff}
+    .drawer-form .field{margin-bottom:1.4rem}
+    .drawer-form label{display:block;margin-bottom:0.5rem;font-size:0.9rem;color:var(--text-muted)}
+    .drawer-form input,.drawer-form select,.drawer-form textarea{
+      width:100%;
+      padding:1rem;
+      background:rgba(13,10,26,.8);
+      border:1px solid rgba(155,93,229,.2);
+      border-radius:10px;
+      color:var(--text-primary);
+      font-family:inherit;
+      font-size:1rem;
+      transition:border-color 0.25s ease;
+    }
+    .drawer-form input:focus,.drawer-form select:focus,.drawer-form textarea:focus{
+      outline:none;
+      border-color:var(--neon-primary);
+      box-shadow:0 0 0 4px rgba(155,93,229,.12);
+    }
+    .drawer-form textarea{min-height:120px;resize:vertical}
+    .drawer-message{margin-top:1rem;padding:1rem;border-radius:10px;display:none}
+    .drawer-message.success{display:block;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--neon-accent)}
+    .drawer-message.error{display:block;background:rgba(249,65,68,.1);border:1px solid rgba(249,65,68,.3);color:var(--neon-secondary)}
+    
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 3, 12, 0.9);
+      z-index: 3000;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 2rem;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: var(--bg-panel);
+      border: 1px solid var(--neon-primary);
+      box-shadow: 0 0 40px rgba(155, 93, 229, 0.3);
+      padding: 2.5rem;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+    }
+    .modal-content h3 { font-size: 1.8rem; margin-bottom: 1rem; color: #fff; }
+    .modal-content p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    
+    footer{
+      padding:3rem;
+      border-top:1px solid rgba(155,93,229,.15);
+      text-align:center;
+      color:var(--text-muted);
+      font-size:0.9rem;
+    }
+    
+    .mobile-toggle{
+      display:none;
+      position:fixed;
+      bottom:1.5rem;
+      right:1.5rem;
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      background:var(--neon-primary);
+      color:#fff;
+      z-index:999;
+      box-shadow:0 8px 30px rgba(155,93,229,.4);
+    }
+    
+    @media (max-width:1024px){
+      .bento-grid{grid-template-columns:repeat(2,1fr)}
+      .bento-item.w2-bottom{grid-column:auto}
+      .bento-item.w2{grid-column:auto}
+      .gallery-grid{grid-template-columns:repeat(2,1fr)}
+      .gallery-item:nth-child(even) { transform: none; }
+    }
+    
+    @media (max-width:768px){
+      .sidebar{
+        transform:translateX(-100%);
+        transition:transform 0.3s ease;
+      }
+      .sidebar.open{transform:translateX(0)}
+      .main-content{margin-left:0}
+      .mobile-toggle{display:grid}
+      .hero{padding:4rem 1rem}
+      .bento-section,.terminal-section,.gallery-section,.contact-section{padding:4rem 1.2rem}
+      .bento-grid{grid-template-columns:1fr}
+      .bento-item.w2,.bento-item.w2-bottom{grid-column:auto}
+      .gallery-grid{grid-template-columns:1fr}
+      .gallery-item{margin-top:0;margin-left:0}
+      .drawer{width:100%;right:-100%}
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 6L26 14L18 18L14 26L6 6Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 14L22 6" stroke="var(--neon-accent)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="14" cy="14" r="2" fill="var(--neon-accent)"/>
+      </svg>
+      <span>FreshCuts Studio</span>
+    </a>
+    
+    <nav class="nav-links">
+      <a href="#pakety"><svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Pakety</a>
+      <a href="#uslugi"><svg viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.95 7.95l-6.92 6.92a6 6 0 0 1-8.48-8.48l6.92-6.92a6 6 0 0 1 7.95-7.95l-3.76 3.76z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Usługi</a>
+      <a href="#galeria"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="2"/><path d="m21 15-5.086-5.086a2 2 0 0 0-2.828 0L4 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Galeria</a>
+      <a href="#opinie"><svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Opinie</a>
+      <a href="#kontakt"><svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/></svg>Kontakt</a>
+    </nav>
+    
+    <div class="hours-widget">
+      <h4>// STATUS_CHECK</h4>
+      <p>Pn–Pt: 10:00–21:00</p>
+      <p>Sob: 10:00–17:00</p>
+      <p>Ndz: Zamknięte</p>
+      <div class="status">SYSTEM_ONLINE</div>
+    </div>
+  </aside>
+  
+  <main class="main-content">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Katowice • Cyberpunk Barber</div>
+        <h1>NEONOWY STYL<br>MOCNY VIBE</h1>
+        <p>Energia miasta, ostre cięcie i look, który od razu przyciąga uwagę. Fade, broda i stylizacja z charakterem.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#pakety">Wybierz pakiet</a>
+          <button class="btn btn-secondary" onclick="openDrawer()">Umów wizytę</button>
+        </div>
+      </div>
+    </section>
+    
+    <section class="bento-section" id="pakety">
+      <div class="section-header">
+        <div class="eyebrow">// CONFIG</div>
+        <h2>Szybkie wybory</h2>
+      </div>
+      <div class="bento-grid">
+        <article class="bento-item w2">
+          <div class="bento-label">STRZYŻENIE</div>
+          <h3>Starter</h3>
+          <p>Na szybkie odświeżenie fryzury</p>
+          <span class="price">99 zł</span>
+        </article>
+        <article class="bento-item w2-h featured">
+          <div class="bento-label">COMBO PREMIUM</div>
+          <h3>Fresh</h3>
+          <p>Najlepszy balans na co dzień dla wymagających</p>
+          <span class="price">149 zł</span>
+        </article>
+        <article class="bento-item">
+          <div class="bento-label">FADE</div>
+          <h3>Fade</h3>
+          <p>Ostre i czyste przejścia</p>
+          <span class="price">79 zł</span>
+        </article>
+        <article class="bento-item">
+          <div class="bento-label">BRODA</div>
+          <h3>Broda</h3>
+          <p>Kontur + modelowanie brzytwą</p>
+          <span class="price">79 zł</span>
+        </article>
+        <article class="bento-item w2-bottom">
+          <div class="bento-label">FULL OVERHAUL</div>
+          <h3>Pro Package</h3>
+          <p>Kompleksowy reset stylu: combo + pielęgnacja + premium stylizacja</p>
+          <span class="price">199 zł</span>
+        </article>
+      </div>
+    </section>
+    
+    <section class="bento-section" id="uslugi" style="background:var(--bg-dark)">
+      <div class="section-header">
+        <div class="eyebrow">// SERVICES</div>
+        <h2>Najmocniejsze cięcia</h2>
+      </div>
+      <div class="bento-grid">
+        <article class="bento-item w2"><div class="bento-label">STYLE_01</div><h3>Strzyżenie męskie</h3><p>Nowoczesna forma na co dzień</p></article>
+        <article class="bento-item w2"><div class="bento-label">STYLE_02</div><h3>Fade / Taper</h3><p>Wyczyszczone przejścia</p></article>
+        <article class="bento-item"><div class="bento-label">STYLE_03</div><h3>Broda</h3><p>Kontur i modelowanie</p></article>
+        <article class="bento-item"><div class="bento-label">STYLE_04</div><h3>Kids Cut</h3><p>Dla najmłodbzych</p></article>
+        <article class="bento-item w2"><div class="bento-label">STYLE_05</div><h3>Stylizacja</h3><p>Dobór produktu + finalny szlif</p></article>
+        <article class="bento-item w2"><div class="bento-label">STYLE_06</div><h3>Combo</h3><p>Strzyżenie + broda</p></article>
+      </div>
+    </section>
+    
+    <section class="terminal-section" id="opinie">
+      <div class="section-header" style="text-align:center">
+        <div class="eyebrow">// SYSTEM_LOGS</div>
+        <h2>Co mówią klienci</h2>
+      </div>
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
+          <span class="terminal-title">freshcuts@terminal:~</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line">
+            <div class="timestamp">2026-03-10 14:32:15</div>
+            <div class="user">>>> pawel_j [SCORE: 5/5]</div>
+            <p>W końcu barber, który rozumie młodszy styl i nie robi wszystkiego na jedno kopyto. Fade wyszedł idealnie, a klimat salonu jest świetny.</p>
+          </div>
+          <div class="terminal-line">
+            <div class="timestamp">2026-02-26 16:45:03</div>
+            <div class="user">>>> adam_k [SCORE: 5/5]</div>
+            <p>Świetna obsługa, szybka wizyta i naprawdę czyste przejście. Wyszedłem dokładnie z takim cięciem, jakiego chciałem.</p>
+          </div>
+          <div class="terminal-line">
+            <div class="timestamp">2026-01-14 11:20:47</div>
+            <div class="user">>>> wiktor_b [SCORE: 5/5]</div>
+            <p>Najlepsze miejsce w okolicy, jeśli chcesz nowoczesny look i konkretną brodę. Wszystko dopracowane, bez zbędnego czekania.</p>
+          </div>
+          <div class="terminal-line">
+            <div class="timestamp">2026-03-18 19:05:22</div>
+            <div class="user">>>> marcin_w [SCORE: 5/5]</div>
+            <p>Atmosfera jest jak w dobrym klubie, a cięcie jest na poziomie. Nie wracam do żadnego innego barbera.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="gallery-section" id="galeria">
+      <div class="section-header">
+        <div class="eyebrow">// PORTFOLIO</div>
+        <h2>Efekty z fotela</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item" data-title="Klasyczny High Fade" data-desc="Idealnie wyblendowane boki z dłuższą, teksturowaną górą.">
+          <div class="gallery-item-inner">
+            <span class="chip">Strzyżenie</span>
+            <h3>Realizacja #1</h3>
+          </div>
+        </div>
+        <div class="gallery-item" data-title="Broda i Kontur" data-desc="Pełne modelowanie zarostu wraz z ostrym konturowaniem brzytwą.">
+          <div class="gallery-item-inner">
+            <span class="chip">Broda</span>
+            <h3>Realizacja #2</h3>
+          </div>
+        </div>
+        <div class="gallery-item" data-title="Mid Fade + Crop" data-desc="Nowoczesne, ostre przejście dopasowane do miejskiego stylu.">
+          <div class="gallery-item-inner">
+            <span class="chip">Fade</span>
+            <h3>Realizacja #3</h3>
+          </div>
+        </div>
+        <div class="gallery-item" data-title="Taper Fade" data-desc="Subtelne, nowoczesne wycieniowanie karku oraz boków przy uszach.">
+          <div class="gallery-item-inner">
+            <span class="chip">Strzyżenie</span>
+            <h3>Realizacja #4</h3>
+          </div>
+        </div>
+        <div class="gallery-item" data-title="Długa Broda Premium" data-desc="Modelowanie długiego zarostu wraz z nałożeniem odżywczego olejku.">
+          <div class="gallery-item-inner">
+            <span class="chip">Broda</span>
+            <h3>Realizacja #5</h3>
+          </div>
+        </div>
+        <div class="gallery-item" data-title="Buzz Cut Fade" data-desc="Bardzo krótkie, militarne cięcie z perfekcyjnym przejściem od zera.">
+          <div class="gallery-item-inner">
+            <span class="chip">Fade</span>
+            <h3>Realizacja #6</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="contact-section" id="kontakt">
+      <h2>GO REZERWACJA</h2>
+      <div class="map-placeholder">
+        <div>
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <circle cx="16" cy="16" r="6" stroke="var(--neon-primary)" stroke-width="2"/>
+            <path d="M16 2V8M16 24V30M2 16H8M24 16H30" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="2" fill="var(--neon-accent)"/>
+          </svg>
+          <h3 style="font-size:1.8rem;margin-bottom:0.5rem">ul. Mariacka 12, Katowice</h3>
+          <p style="color:var(--text-muted); font-size: 1.1rem;">Neonowy punkt w samym sercu Katowic</p>
+        </div>
+      </div>
+      <div class="cta-big" onclick="openDrawer()">REZERWACJA ONLINE</div>
+      <div style="margin-top:2.5rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;color:var(--text-muted); font-weight: 500;">
+        <a href="tel:+48600333444" style="transition: color 0.2s;" onmouseover="this.style.color='var(--neon-primary)'" onmouseout="this.style.color=''">TEL: +48 600 333 444</a>
+        <a href="mailto:kontakt@freshcutsstudio.pl" style="transition: color 0.2s;" onmouseover="this.style.color='var(--neon-primary)'" onmouseout="this.style.color=''">NET: kontakt@freshcutsstudio.pl</a>
+        <a href="https://instagram.com/freshcutsstudio" target="_blank" style="transition: color 0.2s;" onmouseover="this.style.color='var(--neon-primary)'" onmouseout="this.style.color=''">FEED: @freshcutsstudio</a>
+      </div>
+    </section>
+    
+    <footer>
+      © 2026 FreshCuts Studio Katowice. Wszelkie prawa zastrzeżone.
+    </footer>
+  </main>
+  
+  <button class="mobile-toggle" onclick="toggleSidebar()">M</button>
+  
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <h3>Umów wizytę</h3>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <form class="drawer-form" id="contactForm" onsubmit="handleForm(event)">
+      <div class="field">
+        <label for="name">Imię</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="phone">Telefon</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+      <div class="field">
+        <label for="service">Usługa</label>
+        <select id="service" name="service" required>
+          <option value="">Wybierz usługę</option>
+          <option>Strzyżenie męskie</option>
+          <option>Fade / Taper</option>
+          <option>Broda</option>
+          <option>Combo</option>
+          <option>Stylizacja</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="message">Wiadomość</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Wyślij</button>
+      <div class="drawer-message" id="formMsg"></div>
+    </form>
+  </aside>
+
+  <div class="modal" id="galleryModal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 id="modalTitle">Tytuł Realizacji</h3>
+      <p id="modalDesc">Opis realizacji...</p>
+      <button class="btn btn-secondary" onclick="closeModal()" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Zamknij</button>
+    </div>
+  </div>
+  
+  <script>
+    function openDrawer(){
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('drawerOverlay').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeDrawer(){
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('drawerOverlay').classList.remove('open');
+      document.body.style.overflow='';
+    }
+    
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+    
+    function handleForm(e){
+      e.preventDefault();
+      const form = document.getElementById('contactForm');
+      const msg = document.getElementById('formMsg');
+      const data = new FormData(form);
+      const ok = ['name','email','phone','service','message'].every(k => data.get(k)?.toString().trim());
+      const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.get('email'));
+      
+      if(!ok || !email){
+        msg.className = 'drawer-message error';
+        msg.textContent = 'Uzupełnij poprawnie wszystkie pola.';
+        return;
+      }
+      msg.className = 'drawer-message success';
+      msg.textContent = 'Dziękujemy! Skontaktujemy się w sprawie terminu.';
+      form.reset();
+      setTimeout(closeDrawer, 2000);
+    }
+    
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if(scrollY >= sectionTop - 200) current = section.getAttribute('id');
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if(link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
+    });
+    
+    function openModal(title, desc) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalDesc').textContent = desc;
+      document.getElementById('galleryModal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeModal() {
+      document.getElementById('galleryModal').classList.remove('open');
+      if(!document.getElementById('drawer').classList.contains('open')) {
+        document.body.style.overflow='';
+      }
+    }
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      item.addEventListener('click', () => {
+        openModal(item.dataset.title, item.dataset.desc);
+      });
+    });
+  </script>
+</body>
+</html>
