@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FreshCuts Studio — Katowice | Cyberpunk Barber</title>
   <meta name="description" content="FreshCuts Studio — cyberpunkowy barber w Katowicach. Neon, fade, broda i nowoczesny styl." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -510,25 +511,40 @@
       color:var(--text-muted);
       font-size:0.9rem;
     }
-    
+
     .mobile-toggle{
       display:none;
       position:fixed;
       bottom:1.5rem;
       right:1.5rem;
-      width:56px;
-      height:56px;
+      width:54px;
+      height:54px;
       border-radius:50%;
-      background:var(--neon-primary);
-      color:#fff;
-      z-index:999;
-      box-shadow:0 8px 30px rgba(155,93,229,.4);
+      background:#0d0a1a;
+      color:var(--neon-accent);
+      z-index:1999;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-family:var(--font-display);
+      font-weight:700;
+      font-size:1.3rem;
+      line-height:1;
+      padding:0;
+      margin:0;
+      border:2px solid transparent;
+      background-image:linear-gradient(#0d0a1a, #0d0a1a), linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+      background-origin:border-box;
+      background-clip:padding-box, border-box;
+      box-shadow:0 4px 20px rgba(155,93,229,0.3);
+      outline:none;
+      -webkit-tap-highlight-color:transparent;
     }
     
     @media (max-width:1024px){
       .bento-grid{grid-template-columns:repeat(2,1fr)}
       .bento-item.w2-bottom{grid-column:auto}
-      .bento-item.w2{grid-column:auto}
       .gallery-grid{grid-template-columns:repeat(2,1fr)}
       .gallery-item:nth-child(even) { transform: none; }
     }
@@ -540,7 +556,7 @@
       }
       .sidebar.open{transform:translateX(0)}
       .main-content{margin-left:0}
-      .mobile-toggle{display:grid}
+      .mobile-toggle{display:flex}
       .hero{padding:4rem 1rem}
       .bento-section,.terminal-section,.gallery-section,.contact-section{padding:4rem 1.2rem}
       .bento-grid{grid-template-columns:1fr}
@@ -548,6 +564,7 @@
       .gallery-grid{grid-template-columns:1fr}
       .gallery-item{margin-top:0;margin-left:0}
       .drawer{width:100%;right:-100%}
+      .bento-section, .terminal-section, .gallery-section { opacity: 1 !important; transform: none !important; }
     }
   </style>
 </head>
@@ -580,7 +597,6 @@
   </aside>
   
   <main class="main-content">
-    <!-- HERO -->
     <section class="hero" id="top">
       <div class="hero-content">
         <div class="hero-eyebrow">Katowice • Cyberpunk Barber</div>
@@ -870,6 +886,15 @@
       item.addEventListener('click', () => {
         openModal(item.dataset.title, item.dataset.desc);
       });
+    });
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth < 768) {
+        setTimeout(() => {
+          if (typeof counters !== 'undefined' && typeof animateCount === 'function') {
+            counters.forEach(animateCount);
+          }
+        }, 800);
+      }
     });
   </script>
 </body>
